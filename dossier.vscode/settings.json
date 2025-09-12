@@ -1,0 +1,12 @@
+{
+    "intelephense.environment.includePaths": [
+        "vendor/laravel/framework/src/Illuminate/Foundation",
+        "vendor/laravel/framework/src/Illuminate/Database",
+        "vendor/laravel/framework/src/Illuminate/Support",
+        "app/Http/Controllers"  // ← AJOUTEZ CETTE LIGNE
+    ],
+    "intelephense.environment.phpVersion": "8.2",
+    "intelephense.files.associations": [
+        "**/*.php"
+    ]
+}
