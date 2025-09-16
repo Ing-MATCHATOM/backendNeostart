@@ -21,6 +21,10 @@ Route::controller(TemoinController::class)->prefix('temoin')->group(function(){
     Route::get('/index','index');
     Route::post('/store','store');
 });
+
+
+
+
 Route::controller(EleveController::class)->prefix('eleve')->group(function(){
     Route::get('/index', 'index');   // Liste des élèves
     Route::post('/store', 'store');  // Création d'un élève
@@ -29,7 +33,16 @@ Route::controller(EleveController::class)->prefix('eleve')->group(function(){
 Route::controller(EnseignantController::class)->prefix('enseignant')->group(function(){
     Route::get('/index','index');
     Route::post('/store','store');
+<<<<<<< HEAD
   
+=======
+<<<<<<< HEAD
+  
+=======
+  Route::get('/index','index');
+>>>>>>> cfc13d0 (commit alorissa)
+
+>>>>>>> 1ffdeeafabbd68887c97c8fa4b33db42c9495ac9
 });
 });
 
@@ -39,4 +52,3 @@ Route::controller(EnseignantController::class)->prefix('enseignant')->group(func
 Route::controller(NiveauController::class)->prefix('niveau')->group(function(){
     Route::get('/index','index');
 });
-

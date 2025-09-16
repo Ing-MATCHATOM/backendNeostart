@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class ParentEnseignant extends Authenticatable
 {
     use HasFactory,HasApiTokens;
+    use HasFactory,HasApiTokens;
     protected $table =  'parent_enseignant';
     protected $fillable=[
         'id_parent',
@@ -22,6 +23,7 @@ class ParentEnseignant extends Authenticatable
     }
 
     public function enseignant(){
+        return $this->belongsTo(Enseignant::class,'id_enseignant');
         return $this->belongsTo(Enseignant::class,'id_enseignant');
     }
 }
