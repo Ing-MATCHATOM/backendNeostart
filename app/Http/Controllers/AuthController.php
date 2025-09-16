@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Hash,Auth};
+use Illuminate\Support\Facades\{Hash, Auth};
 use Illuminate\Support\Facades\Validator;
 use App\Models\Inscription;
+use App\Models\Eleve;
+use App\Models\Enseignant;
+use App\Models\ParentEleve;
+use App\Models\ParentEnseignant;
+use App\Models\ParentTemoin;
+use App\Models\Temoin;
+use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
@@ -33,44 +39,110 @@ class AuthController extends Controller
             'confirmation' => 0
         ]);
 
+        // Créer un token Sanctum pour l'utilisateur
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'message' => 'Utilisateur créé avec succès',
-            'user' => $user
+            'user' => $user,
+            'token' => $token
         ], 201);
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'courriel' => 'required|email',
-            'mot_de_passe' => 'required'
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'courriel' => 'required|email',
+        'mot_de_passe' => 'required',
+        'role' => 'required|in:parent,eleve,temoin,enseignant'
+    ]);
 
-        $user = Inscription::where('courriel', $request->courriel)->first();
+    $role = $request->role;
+    $user = null;
+    $userInfo = null;
 
-        if (!$user || !Hash::check($request->mot_de_passe, $user->mot_de_passe)) {
-            return response()->json([
-                'message' => 'Identifiants incorrects'
-            ], 401);
-        }
+    switch ($role) {
+        case 'parent':
+            $user = Inscription::where('courriel', $request->courriel)->first();
+            $userInfo = $user;
+            break;
 
-        $token= $user->createToken('token')->plainTextToken;
-        Auth::login($user);
+        case 'eleve':
+            $eleve = Eleve::where('courriel', $request->courriel)->first();
+            if ($eleve) {
+                $user = ParentEleve::where('id_eleve', $eleve->id)->first();
+                $userInfo = $eleve;
+            }
+            break;
 
-        // RETOURNEZ BIEN user à la racine de la réponse
-        return response()->json([
-            'message' => 'Connexion réussie',
-            'token'=>$token,
-            'user' => $user  // ← Doit être à ce niveau
-        ]);
+        case 'enseignant':
+            $enseignant = Enseignant::where('courriel', $request->courriel)->first();
+            if ($enseignant) {
+                $user = ParentEnseignant::where('id_enseignant', $enseignant->id)->first();
+                $userInfo = $enseignant;
+            }
+            break;
 
+        case 'temoin':
+            $temoin = Temoin::where('courriel', $request->courriel)->first();
+            if ($temoin) {
+                $user = ParentTemoin::where('id_temoin', $temoin->id)->first();
+                $userInfo = $temoin;
+            }
+            break;
     }
+
+    if (!$user) {
+        return response()->json(['message' => 'Utilisateur non trouvé'], 401);
+    }
+
+    // Vérification mot de passe hashé
+    if (!Hash::check($request->mot_de_passe, $user->mot_de_passe)) {
+        return response()->json(['message' => 'Mot de passe incorrect'], 401);
+    }
+
+    // Créer le token Sanctum
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    // Préparer la réponse
+    $responseData = [
+        'message' => 'Connexion réussie',
+        'token'   => $token,
+        'role'    => $role,
+        'user'    => $userInfo
+    ];
+
+    // Ajouter les infos selon le rôle
+    switch ($role) {
+        case 'eleve': $responseData['parent_eleve'] = $user; break;
+        case 'enseignant': $responseData['parent_enseignant'] = $user; break;
+        case 'temoin': $responseData['parent_temoin'] = $user; break;
+        case 'parent': $responseData['parent_info'] = $user; break;
+    }
+
+    return response()->json($responseData);
+}
+
+
 
     public function logout(Request $request)
     {
-        // Logout simple sans Sanctum
+        // Supprimer le token Sanctum de l'utilisateur authentifié
+        if ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+        }
+
         return response()->json([
             'message' => 'Déconnexion réussie'
+        ]);
+    }
+
+    // Méthode pour obtenir l'utilisateur courant
+    public function user(Request $request)
+    {
+        return response()->json([
+            'user' => $request->user(),
+            'role' => $request->header('X-Role', 'parent') // Vous devrez gérer le rôle dans les headers
         ]);
     }
 }

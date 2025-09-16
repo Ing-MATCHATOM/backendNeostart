@@ -10,9 +10,19 @@ use App\Models\ParentTemoin;
 
 
 class TemoinController extends Controller
-{
+{  
+    public function index()
+    {
+        // Retourne tous les eleve en JSON
+        $user = request()->user();
+        $temoin=ParentTemoin::with(['temoin','parent'])->where('id_parent',$user->id)->get();
+        return response()->json($temoin);
+    }
+ 
   public function store(TemoinRequest $request)
-{
+{   
+   
+    
     // Vérifiez si l'utilisateur est authentifié
     if (!auth()->check()) {
         return response()->json([

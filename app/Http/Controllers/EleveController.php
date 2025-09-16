@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 
 class EleveController extends Controller
 {
+    public function index()
+    {
+        // Retourne tous les eleve en JSON
+        $user = request()->user();
+        $eleve=ParentEleve::with(['eleve','parent'])->where('id_parent',$user->id)->get();
+        return response()->json($eleve);
+    }
     public function store(EleveRequest $request)
     {
         $user = auth()->user();
@@ -33,7 +40,7 @@ class EleveController extends Controller
         $parentEleve = ParentEleve::create([
             'id_parent' => $user->id,
             'id_eleve' => $eleve->id,
-            'mot_de_passe' => Hash::make($password),
+            'mot_de_passe' => Hash::make('password'),
         ]);
 
         return response()->json([

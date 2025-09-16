@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class EnseignantController extends Controller
 {
+
+    public function index(){
+        $user=request()->user();
+        $enseignants=ParentEnseignant::with(['enseignant','parent'])->where('id_parent',$user->id)->get();
+        return response()->json($enseignants);
+    }
     public function store(EnseignantRequest $request){
         if(!auth()->check()) {
             return response()->json([
@@ -29,3 +35,4 @@ class EnseignantController extends Controller
 
     }
 }
+

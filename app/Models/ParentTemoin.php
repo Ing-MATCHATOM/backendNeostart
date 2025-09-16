@@ -3,23 +3,37 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
-class ParentTemoin extends Model
+class ParentTemoin extends Authenticatable
 {
-    use HasFactory;
-    protected $table =  'parent_temoin';
-    protected $fillable=[
+    use HasFactory,HasApiTokens;
+
+    // Nom explicite de la table (si différent de la convention Laravel)
+    protected $table = 'parent_temoin';
+
+    // Champs autorisés à être remplis en masse
+    protected $fillable = [
         'id_parent',
         'id_temoin',
-        'mot_de_passe'
+        'mot_de_passe',
     ];
 
-    public function inscription(){
-        return $this->belongsTo(Inscription::class);
+    /**
+     * Relation avec le parent (table inscriptions)
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Inscription::class, 'id_parent');
     }
 
-    public function temoin(){
-        return $this->belongsTo(Temoin::class);
+    /**
+     * Relation avec le témoin
+     */
+    public function temoin()
+    {
+        return $this->belongsTo(Temoin::class, 'id_temoin');
     }
 }

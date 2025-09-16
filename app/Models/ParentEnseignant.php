@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
-class ParentEnseignant extends Model
+class ParentEnseignant extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory,HasApiTokens;
     protected $table =  'parent_enseignant';
     protected $fillable=[
         'id_parent',
@@ -15,12 +17,12 @@ class ParentEnseignant extends Model
         'mot_de_passe'
     ];
 
-    public function inscription(){
-        return $this->belongsTo(Inscription::class);
+    public function parent(){
+        return $this->belongsTo(Inscription::class,'id_parent');
     }
 
     public function enseignant(){
-        return $this->belongsTo(Enseignant::class);
+        return $this->belongsTo(Enseignant::class,'id_enseignant');
     }
 }
 

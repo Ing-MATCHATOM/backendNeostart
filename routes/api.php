@@ -18,13 +18,18 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/parent/stats', [ParentController::class, 'getStats']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::controller(TemoinController::class)->prefix('temoin')->group(function(){
+    Route::get('/index','index');
     Route::post('/store','store');
 });
 Route::controller(EleveController::class)->prefix('eleve')->group(function(){
-    Route::post('/store','store');
+    Route::get('/index', 'index');   // Liste des élèves
+    Route::post('/store', 'store');  // Création d'un élève
+
 });
 Route::controller(EnseignantController::class)->prefix('enseignant')->group(function(){
+    Route::get('/index','index');
     Route::post('/store','store');
+  
 });
 });
 
