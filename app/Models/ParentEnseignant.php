@@ -17,7 +17,11 @@ class ParentEnseignant extends Authenticatable
         'mot_de_passe'
     ];
 
+<<<<<<< HEAD
     public function inscription(){
+=======
+    public function parent(){
+>>>>>>> cfc13d0 (commit alorissa)
         return $this->belongsTo(Inscription::class,'id_parent');
     }
 

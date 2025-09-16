@@ -30,7 +30,11 @@ Route::controller(EleveController::class)->prefix('eleve')->group(function(){
 Route::controller(EnseignantController::class)->prefix('enseignant')->group(function(){
     Route::get('/index','index');
     Route::post('/store','store');
+<<<<<<< HEAD
   
+=======
+  Route::get('/index','index');
+>>>>>>> cfc13d0 (commit alorissa)
 
 });
 });

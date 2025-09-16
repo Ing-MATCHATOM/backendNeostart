@@ -24,6 +24,8 @@ class Inscription extends Authenticatable
         'confirmation'
     ];
 
+  
+
     public function parenttemoin(){
         return $this->hasMany(ParentTemoin::class,'parent');
     }
