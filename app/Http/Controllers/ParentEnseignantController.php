@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
+
 use App\Models\ParentEnseignant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-=======
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
->>>>>>> 1ffdeeafabbd68887c97c8fa4b33db42c9495ac9
 
 class ParentEnseignant extends Model
 {
-<<<<<<< HEAD
+
     public function associer(Request $request)
     {
         $validated = $request->validate([
@@ -45,21 +41,3 @@ class ParentEnseignant extends Model
     }
 }
 
-=======
-    use HasFactory;
-    protected $table =  'parent_enseignant';
-    protected $fillable=[
-        'id_parent',
-        'id_enseignant',
-        'mot_de_passe'
-    ];
-
-    public function parent(){
-        return $this->belongsTo(Inscription::class,'id_parent');
-    }
-
-    public function enseignant(){
-        return $this->belongsTo(Enseignant::class,'id_enseignant');
-    }
-}
->>>>>>> 1ffdeeafabbd68887c97c8fa4b33db42c9495ac9
