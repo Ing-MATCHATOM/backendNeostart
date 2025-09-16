@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class EnseignantController extends Controller
 {
+     public function index(){
+        $user=request()->user();
+        $enseignants=ParentEnseignant::with(['enseignant','parent'])->where('id_parent',$user->id)->get();
+        return response()->json($enseignants);
+    }
+
     public function store(EnseignantRequest $request){
         if(!auth()->check()) {
             return response()->json([
@@ -23,7 +29,7 @@ class EnseignantController extends Controller
         ParentEnseignant::create([
             'id_parent'=>request()->user()->id,
             'id_enseignant'=>$enseignant->id,
-            'mot_de_passe'=>Hash::make('password'),
+            'mot_de_passe' => Hash::make('password'),
         ]);
         return response()->json('Enrégistrement effectué avec succes');
 

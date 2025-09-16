@@ -20,11 +20,18 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::controller(TemoinController::class)->prefix('temoin')->group(function(){
     Route::post('/store','store');
 });
+
+
+
+
 Route::controller(EleveController::class)->prefix('eleve')->group(function(){
     Route::post('/store','store');
 });
 Route::controller(EnseignantController::class)->prefix('enseignant')->group(function(){
+    Route::get('/index','index');
     Route::post('/store','store');
+  
+
 });
 });
 
@@ -34,4 +41,3 @@ Route::controller(EnseignantController::class)->prefix('enseignant')->group(func
 Route::controller(NiveauController::class)->prefix('niveau')->group(function(){
     Route::get('/index','index');
 });
-

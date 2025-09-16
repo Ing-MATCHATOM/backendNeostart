@@ -1,17 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Http\Requests\ParentEnseignantRequest;
-use App\Models\ParentEnseignant;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class ParentEnseignantController extends Controller
+class ParentEnseignant extends Model
 {
-    public function store(ParentEnseignantRequest $request){
-        $validate=$request->validated();
+    use HasFactory;
+    protected $table =  'parent_enseignant';
+    protected $fillable=[
+        'id_parent',
+        'id_enseignant',
+        'mot_de_passe'
+    ];
 
-        ParentEnseignant::create($validate);
-        return response()->json('cool');
+    public function parent(){
+        return $this->belongsTo(Inscription::class,'id_parent');
+    }
+
+    public function enseignant(){
+        return $this->belongsTo(Enseignant::class,'id_enseignant');
     }
 }
