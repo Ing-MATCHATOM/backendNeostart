@@ -6,6 +6,7 @@ use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\TemoinController;
+use App\Http\Controllers\SeanceController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,4 +40,12 @@ Route::controller(EnseignantController::class)->prefix('enseignant')->group(func
 Route::controller(NiveauController::class)->prefix('niveau')->group(function(){
     Route::get('/index','index');
 });
+
+// Si authentification avec Sanctum (recommandé) :
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/emploi', [SeanceController::class, 'index']);
+    Route::post('/emploi', [SeanceController::class, 'store']);
+});
+
+
 
