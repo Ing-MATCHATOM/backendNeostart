@@ -5,8 +5,9 @@ use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ParentController;
-use App\Http\Controllers\RapportController;
 use App\Http\Controllers\TemoinController;
+use App\Http\Controllers\SeanceController;
+use App\Http\Controllers\RapportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,8 +39,6 @@ Route::controller(RapportController::class)->prefix('rapports')->group(function 
     Route::post('/', 'store');       // Enregistrer un rapport
     Route::get('/{id}', 'show');     // Détail d’un rapport
 });
-
-
 });
 
 
@@ -49,3 +48,8 @@ Route::controller(NiveauController::class)->prefix('niveau')->group(function(){
     Route::get('/index','index');
 });
 
+// Si authentification avec Sanctum (recommandé) :
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/emploi', [SeanceController::class, 'index']);
+    Route::post('/emploi', [SeanceController::class, 'store']);
+});
