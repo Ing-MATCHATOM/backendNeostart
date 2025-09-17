@@ -7,6 +7,7 @@ use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\TemoinController;
 use App\Http\Controllers\SeanceController;
+use App\Http\Controllers\RapportController;
 use Illuminate\Support\Facades\Route;
 
 
