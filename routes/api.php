@@ -5,6 +5,7 @@ use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ParentController;
+use App\Http\Controllers\RapportController;
 use App\Http\Controllers\TemoinController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,14 @@ Route::controller(EnseignantController::class)->prefix('enseignant')->group(func
     Route::post('/store','store');
   
 });
+
+Route::controller(RapportController::class)->prefix('rapports')->group(function () {
+    Route::get('/', 'index');        // Liste des rapports de l'enseignant connecté
+    Route::post('/', 'store');       // Enregistrer un rapport
+    Route::get('/{id}', 'show');     // Détail d’un rapport
+});
+
+
 });
 
 

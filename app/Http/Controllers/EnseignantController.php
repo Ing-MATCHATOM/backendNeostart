@@ -18,7 +18,7 @@ class EnseignantController extends Controller
         return response()->json($enseignants);
     }
 
-
+    
 
     public function store(EnseignantRequest $request){
         if(!auth()->check()) {
