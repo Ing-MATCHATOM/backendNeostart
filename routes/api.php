@@ -32,6 +32,12 @@ Route::controller(EnseignantController::class)->prefix('enseignant')->group(func
     Route::post('/store','store');
   
 });
+
+Route::controller(RapportController::class)->prefix('rapports')->group(function () {
+    Route::get('/', 'index');        // Liste des rapports de l'enseignant connecté
+    Route::post('/', 'store');       // Enregistrer un rapport
+    Route::get('/{id}', 'show');     // Détail d’un rapport
+});
 });
 
 
