@@ -50,4 +50,21 @@ class EleveController extends Controller
             'password' => $password // ⚠️ seulement si tu veux l’envoyer au frontend
         ], 201);
     }
+
+
+    public function getParentEleve(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json([
+                'message' => 'Utilisateur non authentifié'
+            ], 401);
+        }
+
+        // $eleves = Eleve::whereHas('parenteleve', function ($query) use ($user) {
+        //     $query->where('id_parent', $user->id);
+        // })->get();
+         $eleves = ParentEleve::where('id_parent', $user->id)->with('eleve')->get();
+        return response()->json($eleves);
+    }
 }

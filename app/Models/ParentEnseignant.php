@@ -24,7 +24,7 @@ class ParentEnseignant extends Authenticatable
 
     public function enseignant(){
         return $this->belongsTo(Enseignant::class,'id_enseignant');
-        return $this->belongsTo(Enseignant::class,'id_enseignant');
+       
     }
 }
 
