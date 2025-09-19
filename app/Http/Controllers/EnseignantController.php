@@ -18,7 +18,7 @@ class EnseignantController extends Controller
         return response()->json($enseignants);
     }
 
-
+    
 
     public function store(EnseignantRequest $request){
         if(!auth()->check()) {
@@ -38,5 +38,28 @@ class EnseignantController extends Controller
         return response()->json('Enrégistrement effectué avec succes');
 
     }
+    public function getStats()
+{
+    $user = request()->user();
+
+    // On récupère uniquement les enseignants liés à ce parent
+    $enseignants = ParentEnseignant::where('id_parent', $user->id)
+        ->with('enseignant')
+        ->get();
+
+    $total = $enseignants->count();
+    
+    // ⚠️ Ici je suppose que ton modèle Enseignant a une colonne "status"
+    $actifs = $enseignants->where('enseignant.status', 'actif')->count();
+    $inactifs = $enseignants->where('enseignant.status', 'inactif')->count();
+
+    return response()->json([
+        'total' => $total,
+        'actifs' => $actifs,
+        'inactifs' => $inactifs
+    ]);
+}
+
+
 }
 

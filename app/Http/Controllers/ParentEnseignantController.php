@@ -4,10 +4,11 @@ namespace App\Models;
 
 
 use App\Models\ParentEnseignant;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class ParentEnseignant extends Model
+class ParentEnseignantController extends Model
 {
 
     public function associer(Request $request)
