@@ -14,11 +14,18 @@ class EnseignantController extends Controller
     public function index(){
 
         $user=request()->user();
-        $enseignants=ParentEnseignant::with(['enseignant','parent'])->where('id_parent',$user->id)->get();
+
+        $enseignants=ParentEnseignant::with(['enseignant','parent'])->where('id_parent',$user->id)->get()->map( function($item){
+            $item->associations = $item->enseignant->associations()->with(['eleve','temoin'])->get();
+            return $item;
+        });
+        // $enseignants=ParentEnseignant::with(['enseignant','parent','enseignant.associations.eleve','enseignant.associations.temoin'])->where('id_parent',$user->id)->get()->map( function($item){
+        //     return $item->enseignant;
+        // });
         return response()->json($enseignants);
     }
 
-    
+
 
     public function store(EnseignantRequest $request){
         if(!auth()->check()) {

@@ -10,7 +10,7 @@ use App\Models\ParentTemoin;
 
 
 class TemoinController extends Controller
-{  
+{
     public function index()
     {
         // Retourne tous les eleve en JSON
@@ -18,11 +18,11 @@ class TemoinController extends Controller
         $temoin=ParentTemoin::with(['temoin','parent'])->where('id_parent',$user->id)->get();
         return response()->json($temoin);
     }
- 
+
   public function store(TemoinRequest $request)
-{   
-   
-    
+{
+
+
     // Vérifiez si l'utilisateur est authentifié
     if (!auth()->check()) {
         return response()->json([
@@ -35,11 +35,27 @@ class TemoinController extends Controller
     $temoin = Temoin::create($validate);
 
     ParentTemoin::create([
-        'id_parent' => request()->user()->id, 
+        'id_parent' => request()->user()->id,
         'id_temoin' => $temoin->id,
         'mot_de_passe' => Hash::make('password'),
     ]);
 
     return response()->json('Enregistrement reussi');
 }
+
+public function getParentTemoin(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json([
+                'message' => 'Utilisateur non authentifié'
+            ], 401);
+        }
+
+        // $temoins = Temoin::whereHas('parenttemoin', function ($query) use ($user) {
+        //     $query->where('id_parent', $user->id);
+        // })->get();
+         $temoins = ParentTemoin::where('id_parent', $user->id)->with('temoin')->get();
+        return response()->json($temoins);
+    }
 }

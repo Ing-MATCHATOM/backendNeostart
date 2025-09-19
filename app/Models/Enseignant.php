@@ -12,14 +12,19 @@ class Enseignant extends Model
     protected $table='enseignants';
 
     protected $fillable=[
-	'prenom',	
+	'prenom',
     'nom_famille',
     'courriel',
     'mode_paiement',
     'salaire',
     'nbre_enfant',
-    'matiere',	
-    'classe'	
+    'matiere',
+    'classe'
     ];
+
+     public function associations()
+    {
+        return $this->hasMany(EnseignantEleveTemoin::class, 'enseignant_id');
+    }
 
 }
