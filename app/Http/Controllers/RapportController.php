@@ -17,7 +17,7 @@ class RapportController extends Controller
             return response()->json(['message' => 'Non authentifié.'], 401);
         }
 
-        $rapports = Rapport::where('enseignant_id', $parentEnseignant->id_enseignant)
+        $rapports = Rapport::where('id_enseignant', $parentEnseignant->id_enseignant)
             ->orderBy('date_rapport', 'desc')
             ->get();
 
@@ -41,7 +41,7 @@ class RapportController extends Controller
         ]);
 
         $rapport = Rapport::create([
-            'id_enseignant' => request()->user()->id,
+            'id_enseignant' => $parentEnseignant->id_enseignant, // ✅ correction
             'date_rapport'  => $validated['date'],
             'heure_debut'   => $validated['heure_debut'],
             'heure_fin'     => $validated['heure_fin'],
@@ -64,7 +64,7 @@ class RapportController extends Controller
         }
 
         $rapport = Rapport::where('id', $id)
-            ->where('enseignant_id', $parentEnseignant->id_enseignant)
+            ->where('id_enseignant', $parentEnseignant->id_enseignant) // ✅ correction
             ->firstOrFail();
 
         return response()->json($rapport);

@@ -67,4 +67,5 @@ class EleveController extends Controller
          $eleves = ParentEleve::where('id_parent', $user->id)->with('eleve')->get();
         return response()->json($eleves);
     }
+    
 }

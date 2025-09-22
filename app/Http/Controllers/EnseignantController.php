@@ -7,6 +7,7 @@ use App\Models\Enseignant;
 use App\Models\ParentEnseignant;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EnseignantController extends Controller
 {
@@ -24,6 +25,31 @@ class EnseignantController extends Controller
         // });
         return response()->json($enseignants);
     }
+
+public function mesEleves(Request $request)
+{
+    // Récupérer l'ID de l'enseignant lié à l'utilisateur connecté
+    $enseignantId = auth()->user()->id_enseignant;
+
+    // Vérifier qu'il est bien connecté
+    if (!$enseignantId) {
+        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    }
+
+    // Requête pour récupérer les élèves
+    $eleves = DB::table('enseignant_eleve_temoin')
+        ->join('eleves', 'eleves.id', '=', 'enseignant_eleve_temoin.eleve_id')
+        ->where('enseignant_eleve_temoin.enseignant_id', $enseignantId) // ⚡ utiliser directement l'entier
+        ->select('eleves.id', 'eleves.nom_famille', 'eleves.prenom')
+        ->get();
+
+    return response()->json([
+        'enseignant_id' => $enseignantId, // ⚡ utiliser directement l'entier
+        'eleves' => $eleves
+    ]);
+}
+
+
 
 
 
