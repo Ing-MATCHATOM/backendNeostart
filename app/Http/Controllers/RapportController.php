@@ -85,7 +85,7 @@ $rapports = DB::table('rapport')
     ->where('parent_eleve.id_parent', $parentId)
     ->select(
         'rapport.id',
-        'rapport.date',
+        'rapport.date_rapport',
         'rapport.heure_debut',
         'rapport.heure_fin',
         'rapport.contenu',
@@ -95,14 +95,14 @@ $rapports = DB::table('rapport')
     )
     ->groupBy(
         'rapport.id',
-        'rapport.date',
+        'rapport.date_rapport',
         'rapport.heure_debut',
         'rapport.heure_fin',
         'rapport.contenu',
         'enseignants.nom_famille',
         'enseignants.prenom'
     )
-    ->orderBy('rapport.date', 'desc')
+    ->orderBy('rapport.date_rapport', 'desc')
     ->get();
 
 
