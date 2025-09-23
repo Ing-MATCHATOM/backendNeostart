@@ -67,3 +67,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->get('/emplois', [EmploiController::class, 'recuperer']);
 Route::middleware('auth:sanctum')->get('/mes-eleves', [EnseignantController::class, 'mesEleves']);
+Route::middleware('auth:sanctum')->get('/emplois-eleve', [SeanceController::class, 'indexEleve']);
+Route::middleware('auth:sanctum')->get('/emplois-temoin', [SeanceController::class, 'indexTemoin']);
+Route::middleware('auth:sanctum')->get('/emplois-parent', [SeanceController::class, 'indexParent']);
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/mes-rapports', [RapportController::class, 'mesRapports']);
+    Route::delete('/rapports/{id}', [RapportController::class, 'supprimerRapport']);
+});

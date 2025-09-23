@@ -11,6 +11,14 @@ class Rapport extends Model
 {
     use HasFactory,HasApiTokens;
     protected $table="rapport";
+    protected $fillable = [
+        'id_enseignant',
+        'id_parent',
+        'date_rapport',
+        'heure_debut',
+        'heure_fin',
+        'contenu',
+    ];
 
     protected $guarded=['id_rapport'];
         

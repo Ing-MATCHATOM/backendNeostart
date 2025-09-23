@@ -28,27 +28,59 @@ class EnseignantController extends Controller
 
 public function mesEleves(Request $request)
 {
-    // Récupérer l'ID de l'enseignant lié à l'utilisateur connecté
     $enseignantId = auth()->user()->id_enseignant;
 
-    // Vérifier qu'il est bien connecté
     if (!$enseignantId) {
         return response()->json(['message' => 'Utilisateur non authentifié'], 401);
     }
 
-    // Requête pour récupérer les élèves
-    $eleves = DB::table('enseignant_eleve_temoin')
-        ->join('eleves', 'eleves.id', '=', 'enseignant_eleve_temoin.eleve_id')
-        ->where('enseignant_eleve_temoin.enseignant_id', $enseignantId) // ⚡ utiliser directement l'entier
-        ->select('eleves.id', 'eleves.nom_famille', 'eleves.prenom')
+    // Requête : élèves, témoins et parent
+    $associations = DB::table('enseignant_eleve_temoin as eet')
+        ->join('eleves', 'eleves.id', '=', 'eet.eleve_id')
+        ->leftJoin('temoins', 'temoins.id', '=', 'eet.temoin_id')
+        ->join('parent_enseignant as pe', 'pe.id_enseignant', '=', 'eet.enseignant_id')
+        ->join('inscription', 'inscription.id', '=', 'pe.id_parent')
+        ->where('eet.enseignant_id', $enseignantId)
+        ->select(
+            'eet.enseignant_id',
+            'eleves.id as eleve_id',
+            'eleves.nom_famille as eleve_nom',
+            'eleves.prenom as eleve_prenom',
+            'temoins.id as temoin_id',
+            'temoins.nom as temoin_nom',
+            'temoins.prenom as temoin_prenom',
+            'inscription.id as parent_id',
+            'inscription.nom_famille as parent_nom',
+            'inscription.prenom_nom as parent_prenom'
+        )
         ->get();
 
+    // Liste unique des élèves
+    $eleves = $associations
+        ->where('eleve_id', '!=', null)
+        ->unique('eleve_id')
+        ->values();
+
+    // Liste unique des témoins
+    $temoins = $associations
+        ->where('temoin_id', '!=', null)
+        ->unique('temoin_id')
+        ->values();
+
+    // Infos parent (unique)
+    $parent = $associations->first() ? [
+        'parent_id' => $associations->first()->parent_id,
+        'parent_nom' => $associations->first()->parent_nom,
+        'parent_prenom' => $associations->first()->parent_prenom
+    ] : null;
+
     return response()->json([
-        'enseignant_id' => $enseignantId, // ⚡ utiliser directement l'entier
-        'eleves' => $eleves
+        'enseignant_id' => $enseignantId,
+        'parent' => $parent,
+        'eleves' => $eleves,
+        'temoins' => $temoins
     ]);
 }
-
 
 
 

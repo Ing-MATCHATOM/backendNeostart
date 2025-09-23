@@ -15,6 +15,9 @@ class Seance extends Model
 
     protected $fillable = [
         'id_enseignant',
+        'id_eleve',
+        'id_temoin',
+        'id_parent',
         'jour',
         'heure',
         'matiere',

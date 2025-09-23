@@ -16,10 +16,7 @@ class Enseignant extends Model
     'nom_famille',
     'courriel',
     'mode_paiement',
-    'salaire',
-    'nbre_enfant',
-    'matiere',
-    'classe'
+    'salaire'
     ];
 
      public function associations()
