@@ -25,13 +25,10 @@ class EnseignantRequest extends FormRequest
     {
         return [
            'prenom'=>"required",	
-    'nom_famille'=>"required",
-    'courriel'=>"required",
-    'mode_paiement'=>"required",
-    'salaire'=>"required|min:100|integer",
-    'nbre_enfant'=>"required|integer",
-    'matiere'=>'required',	
-    'classe'=>"required"	
+            'nom_famille'=>"required",
+            'courriel'=>"required",
+            'mode_paiement'=>"required",
+            'salaire'=>"required|min:100|integer"	
         ];
     }
 public function message(){
