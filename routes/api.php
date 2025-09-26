@@ -10,6 +10,9 @@ use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\RapportController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\EmploiController;
+use App\Http\Controllers\SeanceReportController;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -70,7 +73,21 @@ Route::middleware('auth:sanctum')->get('/mes-eleves', [EnseignantController::cla
 Route::middleware('auth:sanctum')->get('/emplois-eleve', [SeanceController::class, 'indexEleve']);
 Route::middleware('auth:sanctum')->get('/emplois-temoin', [SeanceController::class, 'indexTemoin']);
 Route::middleware('auth:sanctum')->get('/emplois-parent', [SeanceController::class, 'indexParent']);
+Route::middleware('auth:sanctum')->get('/emplois-enseignant', [SeanceController::class, 'indexEnseignant']);
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('/mes-rapports', [RapportController::class, 'mesRapports']);
     Route::delete('/rapports/{id}', [RapportController::class, 'supprimerRapport']);
+    Route::put('/seances/{id}/valider', [SeanceController::class, 'toggleValidation']);
+    Route::put('/seances/{id}/reporter', [SeanceController::class, 'reporter']);
 });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('/seances/{id}/reporter', [SeanceReportController::class, 'reporter']);
+    Route::get('/reports-enseignant', [SeanceReportController::class, 'indexByEnseignant']);
+});
+Route::middleware('auth:sanctum')->get('/mes-reports', [SeanceReportController::class, 'mesReports']);
+Route::middleware('auth:sanctum')->put('/reports/{id}/statut', [SeanceReportController::class, 'updateStatut']);
+Route::middleware('auth:sanctum')->get('/mes-reports-enseignant', [SeanceReportController::class, 'mesReportsEnseignant']);
+Route::middleware('auth:sanctum')->get('/statistiques-validations', [SeanceController::class, 'statistiquesValidations']);
+Route::middleware('auth:sanctum')->put('/seances/{id}/valider', [SeanceController::class, 'toggleValidation']);
+
+Route::middleware('auth:sanctum')->get('/enseignant/seances', [SeanceController::class, 'getSeances']);

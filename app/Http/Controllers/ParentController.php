@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ParentEleve;
 use App\Models\ParentEnseignant;
 use App\Models\ParentTemoin;
+use App\Models\Seance;
 
 class ParentController extends Controller
 {
@@ -17,7 +18,7 @@ class ParentController extends Controller
             'enseignants' => ParentEnseignant::where('id_parent', $parent->id)->count(),
             'eleves'      => ParentEleve::where('id_parent', $parent->id)->count(),
             'temoins'     => ParentTemoin::where('id_parent', $parent->id)->count(),
-            'seances'     => 0, // à adapter si tu as une table séances
+            'seances'     => Seance::where('id_parent', $parent->id)->count(), // à adapter si tu as une table séances
         ]);
     }
 }
