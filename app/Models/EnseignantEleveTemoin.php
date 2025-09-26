@@ -19,3 +19,4 @@ class EnseignantEleveTemoin extends Model
         return $this->belongsTo(Temoin::class);
     }
 }
+

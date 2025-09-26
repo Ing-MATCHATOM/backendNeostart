@@ -22,7 +22,7 @@ class Eleve extends Model
     public function niveau(){
         return $this->belongsTo(Niveau::class);
     }
-
+    
      public function associationEleve()
     {
         return $this->hasMany(EnseignantEleveTemoin::class, 'eleve_id');

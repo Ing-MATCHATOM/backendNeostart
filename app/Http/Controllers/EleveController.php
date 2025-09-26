@@ -15,7 +15,7 @@ class EleveController extends Controller
     {
         // Retourne tous les eleve en JSON
         $user = request()->user();
-        $eleve=ParentEleve::with(['eleve','parent'])->where('id_parent',$user->id)->get();
+        $eleve=ParentEleve::with(['eleve','parent','eleve.niveau'])->where('id_parent',$user->id)->get();
         return response()->json($eleve);
     }
     public function store(EleveRequest $request)
@@ -64,7 +64,9 @@ class EleveController extends Controller
         // $eleves = Eleve::whereHas('parenteleve', function ($query) use ($user) {
         //     $query->where('id_parent', $user->id);
         // })->get();
-         $eleves = ParentEleve::where('id_parent', $user->id)->with('eleve')->get();
+        
+         $eleves = ParentEleve::where('id_parent', $user->id)->with(['eleve','eleve.niveau'])->get();
+         
         return response()->json($eleves);
     }
     

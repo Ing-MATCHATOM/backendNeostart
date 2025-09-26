@@ -81,4 +81,10 @@ class SeanceController extends Controller
     $seances = Seance::where('id_parent', $parentId)->get(); 
     return response()->json($seances);
 }
+public function getSeances($id)
+{
+    $seances = Seance::where('eleve_id', $id)->get();
+    return response()->json($seances);
+}
+
 }
