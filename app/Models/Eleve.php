@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Eleve extends Model
 {
-    use HasFactory;
+    use HasFactory,Notifiable;
     protected $table = "eleves";
     protected $fillable = [
         'nom_famille',

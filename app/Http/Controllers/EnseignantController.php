@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EnseignantRequest;
+use App\Mail\SendPasswordMail;
+use App\Mail\SendPasswordProf;
 use App\Models\Enseignant;
 use App\Models\ParentEnseignant;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class EnseignantController extends Controller
 {
@@ -86,20 +90,24 @@ public function mesEleves(Request $request)
 
 
     public function store(EnseignantRequest $request){
-        if(!auth()->check()) {
-            return response()->json([
-                'message' =>'Utilisateur non authentifié'
-            ],401);
-        }
+        
+        $user=request()->user();
         $validate=$request->validated();
 
         $enseignant = Enseignant::create($validate);
 
+        $password = Str::random(8);
+
         ParentEnseignant::create([
             'id_parent'=>request()->user()->id,
             'id_enseignant'=>$enseignant->id,
-            'mot_de_passe' => Hash::make('password'),
+            'mot_de_passe' => Hash::make($password),
         ]);
+
+        $owner = $enseignant->courriel;
+
+        Mail::to($owner)->send(new SendPasswordProf($user, $enseignant, $password));
+
         return response()->json('Enrégistrement effectué avec succes');
 
     }

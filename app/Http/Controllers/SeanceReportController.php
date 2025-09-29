@@ -27,12 +27,34 @@ class SeanceReportController extends Controller
         ]);
 
         // Met à jour le statut de la séance
+        $seance->statut = 'Possibilité de report';
+        $seance->save();
+
+        return response()->json(['message' => 'Séance reportée avec succès']);
+    }
+    public function supprimer(Request $request, $id)
+    {
+
+        $seance = Seance::findOrFail($id);
+
+        // Met à jour le statut de la séance
         $seance->statut = 'reporte';
         $seance->save();
 
         return response()->json(['message' => 'Séance reportée avec succès']);
     }
 
+    public function valider(Request $request, $id)
+    {
+
+        $seance = Seance::findOrFail($id);
+
+        // Met à jour le statut de la séance
+        $seance->statut = 'valide';
+        $seance->save();
+
+        return response()->json(['message' => 'Séance validée avec succès']);
+    }
     // Afficher tous les reports d’un enseignant
     public function indexByEnseignant()
     {

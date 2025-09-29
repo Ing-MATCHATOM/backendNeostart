@@ -176,8 +176,6 @@ public function statistiquesValidations(Request $request)
             'enseignants.nom_famille as enseignant_nom',
             'enseignants.prenom as enseignant_prenom',
             DB::raw("SUM(CASE WHEN seance_validations.statut = 'valide' THEN 1 ELSE 0 END) as nb_valide"),
-            DB::raw("SUM(CASE WHEN seance_validations.statut = 'refuse' THEN 1 ELSE 0 END) as nb_refuse"),
-            DB::raw("SUM(CASE WHEN seance_validations.statut = 'en_attente' THEN 1 ELSE 0 END) as nb_en_attente")
         )
         ->groupBy('seances.id','seances.matiere','seances.jour','seances.heure','enseignants.nom_famille','enseignants.prenom')
         ->orderBy('seances.jour')
@@ -185,21 +183,63 @@ public function statistiquesValidations(Request $request)
 
     return response()->json($seances);
 }
+
 public function toggleValidation($id, Request $request)
     {
         $parentId = Auth::id();
 
         $validation = SeanceValidation::firstOrCreate(
             ['id_seance' => $id, 'id_individu' => $parentId, 'type_individu' => 'parent'],
-            ['statut' => 'planifié']
+            ['statut' => 'validé']
         );
 
-        $validation->statut = $validation->statut === 'valide' ? 'planifié' : 'valide';
+        /*$validation->statut = $validation->statut === 'valide' ? 'planifié' : 'valide';*/
         $validation->save();
 
         return response()->json(['statut' => $validation->statut]);
     }
 
+    public function toggleValidationE($id, Request $request)
+    {
+        $parentId = Auth::id();
+
+        $validation = SeanceValidation::firstOrCreate(
+            ['id_seance' => $id, 'id_individu' => $parentId, 'type_individu' => 'Enseignant'],
+            ['statut' => 'validé']
+        );
+
+        $validation->save();
+
+        return response()->json(['statut' => $validation->statut]);
+    }
+
+        public function toggleValidationS($id, Request $request)
+    {
+        $parentId = Auth::id();
+
+        $validation = SeanceValidation::firstOrCreate(
+            ['id_seance' => $id, 'id_individu' => $parentId, 'type_individu' => 'eleve'],
+            ['statut' => 'validé']
+        );
+        $validation->save();
+
+        /*$validation->statut = $validation->statut === 'valide' ? 'planifié' : 'valide';*/
+        return response()->json(['statut' => $validation->statut]);
+    }
+
+            public function toggleValidationT($id, Request $request)
+    {
+        $parentId = Auth::id();
+
+        $validation = SeanceValidation::firstOrCreate(
+            ['id_seance' => $id, 'id_individu' => $parentId, 'type_individu' => 'temoin'],
+            ['statut' => 'validé']
+        );
+        $validation->save();
+
+        /*$validation->statut = $validation->statut === 'valide' ? 'planifié' : 'valide';*/
+        return response()->json(['statut' => $validation->statut]);
+    }
     // Reporter une séance
     public function reporter($id, Request $request)
     {
@@ -235,4 +275,17 @@ public function toggleValidation($id, Request $request)
 
         return response()->json($seances);
     }
+public function getSeancesValide(Request $request)
+{
+    $enseignantId = $request->user()->id;
+
+    $count = DB::table('seance_validations')
+        ->where('id_individu', $enseignantId)
+        ->where('type_individu', 'enseignant')
+        ->where('statut', 'valide') // si tu veux compter uniquement celles validées
+        ->count();
+
+    return response()->json(['count' => $count]);
+}
+
 }

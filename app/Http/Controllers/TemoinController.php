@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TemoinRequest;
+use App\Mail\SendPasswordTemoin;
 use App\Models\Temoin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\ParentTemoin;
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TemoinController extends Controller
 {
@@ -24,15 +26,16 @@ class TemoinController extends Controller
 
 
     // Vérifiez si l'utilisateur est authentifié
-    if (!auth()->check()) {
-        return response()->json([
-            'message' => 'Utilisateur non authentifié'
-        ], 401);
-    }
-
+    
+    $user=request()->user();
     $validate = $request->validated();
 
     $temoin = Temoin::create($validate);
+    $password = Str::random(8);
+
+    $owner = $temoin->courriel;
+
+    Mail::to($owner)->send(new SendPasswordTemoin($user, $temoin, $password));
 
     ParentTemoin::create([
         'id_parent' => request()->user()->id,

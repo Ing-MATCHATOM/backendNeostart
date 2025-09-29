@@ -11,8 +11,6 @@ use App\Http\Controllers\RapportController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\EmploiController;
 use App\Http\Controllers\SeanceReportController;
-use GuzzleHttp\Psr7\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -56,9 +54,6 @@ Route::controller(AssociationController::class)
 
 });
 
-
-
-
 Route::controller(NiveauController::class)->prefix('niveau')->group(function(){
     Route::get('/index','index');
 });
@@ -82,12 +77,16 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('/seances/{id}/reporter', [SeanceReportController::class, 'reporter']);
+    Route::put('/seances/{id}/supprimer', [SeanceReportController::class, 'supprimer']);
     Route::get('/reports-enseignant', [SeanceReportController::class, 'indexByEnseignant']);
 });
 Route::middleware('auth:sanctum')->get('/mes-reports', [SeanceReportController::class, 'mesReports']);
 Route::middleware('auth:sanctum')->put('/reports/{id}/statut', [SeanceReportController::class, 'updateStatut']);
 Route::middleware('auth:sanctum')->get('/mes-reports-enseignant', [SeanceReportController::class, 'mesReportsEnseignant']);
 Route::middleware('auth:sanctum')->get('/statistiques-validations', [SeanceController::class, 'statistiquesValidations']);
-Route::middleware('auth:sanctum')->put('/seances/{id}/valider', [SeanceController::class, 'toggleValidation']);
-
+Route::middleware('auth:sanctum')->put('/seances/{id}/validerE', [SeanceController::class, 'toggleValidationE']);
+Route::middleware('auth:sanctum')->put('/seances/{id}/validerP', [SeanceController::class, 'toggleValidation']);
+Route::middleware('auth:sanctum')->put('/seances/{id}/validerS', [SeanceController::class, 'toggleValidationS']);
+Route::middleware('auth:sanctum')->put('/seances/{id}/validerT', [SeanceController::class, 'toggleValidationT']);
 Route::middleware('auth:sanctum')->get('/enseignant/seances', [SeanceController::class, 'getSeances']);
+Route::middleware('auth:sanctum')->get('/stats-validations', [SeanceController::class, 'getSeancesValide']);
